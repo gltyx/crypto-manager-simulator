@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1,user-scalable=0"
+    />
+    <title>Crypto</title>
+
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="./assets/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="./assets/favicon-16x16.png">
+    
+    <link href="./css/reset.css" rel="stylesheet" />
+    <script>
+      // load theme
+      const loadThemeFile = (name) => {
+        const fileref = document.createElement("link");
+        fileref.setAttribute("rel", "stylesheet");
+        fileref.setAttribute("type", "text/css");
+        fileref.setAttribute("href", `./themes/${name.toLowerCase()}.css`);
+        document.body.appendChild(fileref);
+      };
+
+      const checkTheme = () => {
+        let filename = "Terminal";
+
+        if (localStorage.getItem("SETTINGS") !== null) {
+          const tempSettings = JSON.parse(localStorage.getItem("SETTINGS"));
+
+          if (
+            tempSettings.theme !== null &&
+            tempSettings.theme !== undefined &&
+            tempSettings.theme.length > 0
+          ) {
+            filename = tempSettings.theme;
+          }
+        }
+
+        loadThemeFile(filename);
+      };
+
+      document.addEventListener("DOMContentLoaded", () => {
+        checkTheme();
+      });
+    </script>
+  </head>
+
+  <body>
+    <script src="chs.js"></script>
+    <script src="core.js"></script>
+    <div id="popup">
+      <div id="popup--helper-int">
+        <h2>INT</h2>
+        <p>
+          Int is short for Intelligence.<br>With a higher int value, the efficiency will increase and the chance of getting more than 1 coin per autominer will increase.
+        </p>
+        <div>
+          <button id="popup--helper-int--cancel">Close</button>
+        </div>
+      </div>
+      <div id="popup--helper-char">
+        <h2>CHAR</h2>
+        <p>
+          Char is short for Charisma.<br>If you have higher charisma, the price increase in the shop will decrease.
+        </p>
+        <div>
+          <button id="popup--helper-char--cancel">Close</button>
+        </div>
+      </div>
+      <div id="popup--reset-game">
+        <h2>Delete Gamedata?</h2>
+        <p>
+          Do you really want to reset your game? All your data will be
+          permanently deleted!
+        </p>
+        <div>
+          <button id="popup--reset-game--cancle">Cancel</button>
+          <button id="popup--reset-game--delete">Delete</button>
+        </div>
+      </div>
+      <div id="popup--retire">
+        <h2>Retired</h2>
+        <p>
+          You finished the game.
+        </p>
+        <div>
+          <button id="popup--retire--restart">Restart</button>
+        </div>
+      </div>
+      <div id="popup--settings">
+        <h2>Settings</h2>
+        <div>
+          <div class="form-group">
+            <label for="theme-select">Select Theme:</label>
+            <select name="theme-select" id="popup--settings--selected-theme">
+              <option value="terminal" selected>Terminal</option>
+              <option value="modern">Modern</option>
+            </select>
+            <div style="height: 1em;"></div>
+            <label for="autosave-select">Auto Save:</label>
+            <select name="autosave-select" id="popup--settings--auto-save">
+              <option value="on" selected>On</option>
+              <option value="off">Off</option>
+            </select>
+            <div style="height: 1em;"></div>
+            <label for="markettimer-select">Market Timer:</label>
+            <select name="markettimer-select" id="popup--settings--market-timer">
+              <option value="0" selected>30s</option>
+              <option value="5">25s</option>
+              <option value="10">20s</option>
+              <option value="15">15s</option>
+              <option value="20">10s</option>
+              <option value="25">5s</option>
+            </select>
+            <p>New market timer will be active, after the timer reached 0!</p>
+          </div>
+        </div>
+        <div>
+          <button id="popup--settings--cancle">Cancle</button>
+          <button id="popup--settings--save">Save</button>
+        </div>
+      </div>
+    </div>
+
+    <header>
+      <h1>Crypto Manager</h1>
+      <div>
+        <button id="game--save">SAVE</button>
+        <button id="game--reset">RESET</button>
+        <button id="game--settings">SETTINGS</button>
+      </div>
+    </header>
+
+    <main id="screen">
+      <div class="wrapper">
+        <h2>Console</h2>
+        <div id="console"></div>
+      </div>
+      <div class="wrapper">
+        <h2>Status</h2>
+        <div id="status">
+          <div id="info">
+            <p>
+              <svg xmlns="http://www.w3.org/2000/svg" id="popup--helper-char--show" class="icon" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <circle cx="12" cy="12" r="9" />
+                <line x1="12" y1="17" x2="12" y2="17.01" />
+                <path d="M12 13.5a1.5 1.5 0 0 1 1 -1.5a2.6 2.6 0 1 0 -3 -4" />
+              </svg>
+              Char: <span id="info--char">-</span></p>
+            <p>
+              <svg xmlns="http://www.w3.org/2000/svg" id="popup--helper-int--show" class="icon" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <circle cx="12" cy="12" r="9" />
+                <line x1="12" y1="17" x2="12" y2="17.01" />
+                <path d="M12 13.5a1.5 1.5 0 0 1 1 -1.5a2.6 2.6 0 1 0 -3 -4" />
+              </svg>
+              Int: <span id="info--int">-</span></p>
+            <p>Coins: <span id="info--coins">-</span></p>
+            <p>Money: <span id="info--money">--.--</span></p>
+          </div>
+        </div>
+      </div>
+      <div class="wrapper">
+        <h2>Market</h2>
+        <div id="stock">
+          <div>
+            <svg id="stock--chart" width="100%" height="100%"></svg>
+          </div>
+          <div id="stock--status">
+            <p>Timer:<span id="stock--timer">--</span></p>
+            <p>Sell:<span id="stock--sell">---</span></p>
+            <p>Buy:<span id="stock--buy">--</span></p>
+          </div>
+        </div>
+      </div>
+      <div class="wrapper">
+        <h2>Actions</h2>
+        <div id="actions">
+          <div class="text-action--wrapper wrap">
+            <div>
+              <h3>Buy crypto coins</h3>
+              <p>
+                Buy crypto coins. Buy price is 5% higher than sell price. Check
+                Stock market for current price.
+              </p>
+            </div>
+            <div>
+              <input
+                type="number"
+                min="0"
+                id="action--buy-input"
+                placeholder="Amount"
+              />
+              <button id="action--buy-coin">Buy</button>
+              <button id="action--buy-all-coins">Buy All</button>
+            </div>
+          </div>
+          <div class="text-action--wrapper wrap">
+            <div>
+              <h3>Sell earned crypto coins</h3>
+              <p>
+                Sell your earned crypto coins. Check Stock market for current
+                price.
+              </p>
+            </div>
+            <div>
+              <input
+                type="number"
+                min="0"
+                id="action--sell-input"
+                placeholder="Amount"
+              />
+              <button id="action--sell-coin">Sell</button>
+              <button id="action--sell-all-coins">Sell All</button>
+            </div>
+          </div>
+          <div class="text-action--wrapper">
+            <div>
+              <h3>Search for crypto coins</h3>
+              <p>Search for coins. 20% chance of finding a coin.</p>
+            </div>
+            <div>
+              <button id="action--mine-coin">Mine</button>
+            </div>
+          </div>
+
+          <div
+            id="action--helper-buy-container"
+            class="text-action--wrapper hidden"
+          >
+            <div>
+              <h3>Stock Helper: Auto buy coins</h3>
+              <p>
+                Enter maximal buy price. If everything is setup, turn the auto
+                buyer on. This function will automatically buys all coins you
+                can with the available money. This will happen 1s bevor you get
+                a new stock price!
+              </p>
+            </div>
+            <div>
+              <input
+                type="number"
+                min="0"
+                id="action--helper-buy-input"
+                placeholder="Max price"
+              />
+              <button id="action--helper-buy" disabled="true">Turn On</button>
+            </div>
+          </div>
+          <div
+            id="action--helper-sell-container"
+            class="text-action--wrapper hidden"
+          >
+            <div>
+              <h3>Stock Helper: Auto sell coins</h3>
+              <p>
+                Enter minimal sell price. If everything is setup, turn the auto
+                seller on. This function will automatically sell all coins you
+                have if the sell price is reached. This will happen 1s bevor you
+                get a new stock price!
+              </p>
+            </div>
+            <div>
+              <input
+                type="number"
+                min="0"
+                id="action--helper-sell-input"
+                placeholder="Min price"
+              />
+              <button id="action--helper-sell" disabled="true">
+                Turn On
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="wrapper">
+        <h2>Shop</h2>
+        <div id="shop">
+          <div class="text-action--wrapper">
+            <div>
+              <h3>Auto crypto miner</h3>
+              <p>
+                Automatically searches for coins. 10% chance of finding a coin.
+              </p>
+              <p>Inventory: <span id="equipment--auto-miner">0</span></p>
+            </div>
+            <div>
+              <button id="shop--auto-miner">Buy [<span></span>€]</button>
+              <button id="shop--auto-miner-sell">Sell [<span></span>€]</button>
+            </div>
+          </div>
+          <div class="text-action--wrapper">
+            <div>
+              <h3>Better Auto crypto miner</h3>
+              <p>
+                Automatically searches for coins. 40% chance of finding a coin.
+              </p>
+              <p>Inventory: <span id="equipment--better-auto-miner">0</span></p>
+            </div>
+            <div>
+              <button id="shop--better-auto-miner">Buy [<span></span>€]</button>
+              <button id="shop--better-auto-miner-sell">
+                Sell [<span></span>€]
+              </button>
+            </div>
+          </div>
+          <div class="text-action--wrapper">
+            <div>
+              <h3>High Quality Auto crypto miner</h3>
+              <p>
+                Automatically searches for coins. 90% chance of finding a coin.
+              </p>
+              <p>
+                Inventory:
+                <span id="equipment--highquality-auto-miner">0</span>
+              </p>
+            </div>
+            <div>
+              <button id="shop--highquality-auto-miner">
+                Buy [<span></span>€]
+              </button>
+              <button id="shop--highquality-auto-miner-sell">
+                Sell [<span></span>€]
+              </button>
+            </div>
+          </div>
+
+          <!-- HELPER -->
+          <div id="shop--helper-buy-container" class="text-action--wrapper">
+            <div>
+              <h3>Stock Helper: Auto buy coins</h3>
+              <p>
+                Auto buy coins if a specific buy Price is reached.
+              </p>
+            </div>
+            <div>
+              <button id="shop--helper-buy">Buy [<span></span>€]</button>
+            </div>
+          </div>
+          <div id="shop--helper-sell-container" class="text-action--wrapper">
+            <div>
+              <h3>Stock Helper: Auto sell coins</h3>
+              <p>
+                Auto sell coins if a specific sell Price is reached.
+              </p>
+            </div>
+            <div>
+              <button id="shop--helper-sell">Buy [<span></span>€]</button>
+            </div>
+          </div>
+
+          <!-- INT BOOSTER -->
+          <div id="shop--course-int-container" class="text-action--wrapper">
+            <div>
+              <h3>Online Crypto Course</h3>
+              <p>
+                60% chance of increasing your INT.
+              </p>
+            </div>
+            <div>
+              <button id="shop--course-int">Buy [<span></span>€]</button>
+            </div>
+          </div>
+
+          <!-- CHAR BOOSTER -->
+          <div id="shop--course-char-container" class="text-action--wrapper">
+            <div>
+              <h3>Online Charisma Course</h3>
+              <p>
+                60% chance of increasing your CHAR.
+              </p>
+            </div>
+            <div>
+              <button id="shop--course-char">Buy [<span></span>€]</button>
+            </div>
+          </div>
+
+          <!-- CHAR BOOSTER -->
+          <div id="shop--finish-game-container" class="text-action--wrapper">
+            <div>
+              <h3>Retire</h3>
+              <p>
+                Retire from your crypto manager job.
+              </p>
+            </div>
+            <div>
+              <button id="shop--finish-game">Buy [<span></span>€]</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <script src="scripts/main.js"></script>
+<!--客服 开始-->
+<script src="//g8hh.github.io/static/js/jquery.min.js"></script>
+<link rel="stylesheet" href="//g8hh.github.io/static/css/kf.css" type="text/css" media="screen" charset="utf-8">
+<script src="//g8hh.github.io/static/js/kf.js"></script>
+<!-- 客服 结束 -->
+<!--站长统计-->
+    <div style="display: none">
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?6581389daf4dd6fe7dbb4d20fdcb52a6";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+    </div>
+  </body>
+</html>
