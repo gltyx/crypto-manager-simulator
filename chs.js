@@ -265,7 +265,7 @@ var cnPrefix = {
     "Better Auto Miner added! Amount: ": "添加了更好的自动矿工！ 数量：",
     "Charisma increased! Amount: ": "魅力提升了！ 数量：",
     "High Quality Auto Miner added! Amount: ": "添加了高质量的自动矿工！ 数量：",
-    "Intelligence increased! Amount: ": "智力提升！ 数量：",
+    "Intelligence increased! Amount: ": "智能提升！ 数量：",
     "": "",
     "": "",
     "": "",
